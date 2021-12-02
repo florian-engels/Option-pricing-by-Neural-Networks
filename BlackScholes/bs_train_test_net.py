@@ -1,5 +1,5 @@
 import torch
-import black_scholes_sim
+import BlackScholes.black_scholes_sim as black_scholes_sim
 import network_class
 import network_class_skip_connections
 import torch.optim as optim

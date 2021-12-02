@@ -7,7 +7,8 @@ import matplotlib.pyplot as plt
 import time
 
 
-def simulate_data(batch_size, d, M, one_step_euler):
+
+def simulate_data(batch_size, d, M, one_step_euler, cor, correlations):
     # drawing random values
     x0 = torch.FloatTensor(batch_size, d).uniform_(9, 10)
     time = torch.FloatTensor(batch_size).uniform_(0, 1)
@@ -17,12 +18,12 @@ def simulate_data(batch_size, d, M, one_step_euler):
 
     # TODO: Korrelationen so häufig sehr niedrig, bzw auch häufig 0 und nie negativ
     # sample correlation-matrix
-    a = torch.rand(batch_size, d, d)
-    a = torch.matmul(a, torch.transpose(a, 1, 2))
-    a = (a - torch.min(a)) / (torch.max(a) - torch.min(a))
-    cor = a - torch.triu(torch.tril(a)) + torch.eye(d, d).repeat(batch_size, 1, 1)
-    # transform correlations to "input-format" to give it to the NN
-    correlations = torch.stack((cor[:, 1, 0], cor[:, 2, 0], cor[:, 2, 1]), dim=1)
+    # a = torch.rand(batch_size, d, d)
+    # a = torch.matmul(a, torch.transpose(a, 1, 2))
+    # a = (a - torch.min(a)) / (torch.max(a) - torch.min(a))
+    # cor = a - torch.triu(torch.tril(a)) + torch.eye(d, d).repeat(batch_size, 1, 1)
+    # # transform correlations to "input-format" to give it to the NN
+    # correlations = torch.stack((cor[:, 1, 0], cor[:, 2, 0], cor[:, 2, 1]), dim=1)
     # TODO: um variabel in den Dimensionen zu bleiben einen Ansatz dieser Art waehlen. Aber problematisch manchmal wenn Wert nahe 0.
     #correlations = (cor - torch.triu(cor))[cor - torch.triu(cor) != 0].reshape(batch_size, d)
 
@@ -54,13 +55,22 @@ def validation_mc(d, M, batch_size, mc_samples, one_step_euler):
     gamma_phi = torch.FloatTensor(batch_size).uniform_(10, 12)
     gamma_mu = torch.FloatTensor(batch_size, d).uniform_(0.1, 0.6)
 
-    # sample correlation-matrix
-    a = torch.rand(batch_size, d, d)
-    a_sym = torch.matmul(a, torch.transpose(a, 1, 2))
-    a_sym = (a_sym - torch.min(a_sym)) / (torch.max(a_sym) - torch.min(a_sym))
-    cor = a_sym - torch.triu(torch.tril(a_sym)) + torch.eye(d, d).repeat(batch_size, 1, 1)
-    # transform correlations to "input-format" to give it to the NN
-    correlations = (cor - torch.triu(cor))[cor - torch.triu(cor) != 0].reshape(batch_size, d)
+    # simulate correlation matrices ones
+    a = torch.normal(mean=torch.zeros(3, 5), std=torch.ones(3, 5))
+    cor = torch.corrcoef(a).unsqueeze(0)
+    for i in range(1, batch_size):
+        a = torch.normal(mean=torch.zeros(3, 5), std=torch.ones(3, 5))
+        a = torch.corrcoef(a).unsqueeze(0)
+        cor = torch.cat((cor, a))
+    correlations = torch.stack((cor[:, 1, 0], cor[:, 2, 0], cor[:, 2, 1]), dim=1)
+
+    # # sample correlation-matrix
+    # a = torch.rand(batch_size, d, d)
+    # a_sym = torch.matmul(a, torch.transpose(a, 1, 2))
+    # a_sym = (a_sym - torch.min(a_sym)) / (torch.max(a_sym) - torch.min(a_sym))
+    # cor = a_sym - torch.triu(torch.tril(a_sym)) + torch.eye(d, d).repeat(batch_size, 1, 1)
+    # # transform correlations to "input-format" to give it to the NN
+    # correlations = (cor - torch.triu(cor))[cor - torch.triu(cor) != 0].reshape(batch_size, d)
 
     x_input = torch.cat((x0, time.unsqueeze(1), gamma_sigma.flatten(start_dim=1), gamma_mu.flatten(start_dim=1),
                          gamma_phi.unsqueeze(1), correlations), dim=1)
@@ -114,7 +124,7 @@ if __name__ == '__main__':
     start_time = time.time()
 
     # Enable skip connections
-    skip_enabled = False
+    skip_enabled = True
     # simulate data with one-step solution (True) or via Euler (False)
     one_step_euler = True
     # Chargengroeße
@@ -124,7 +134,17 @@ if __name__ == '__main__':
     # overall multilevel architecture levels
     overall_levels = 4
 
-    x_input, y_target = simulate_data(batch_size=batch_size, d=3, M=25, one_step_euler=one_step_euler)
+    # simulate correlation matrices ones
+    a = torch.normal(mean=torch.zeros(3, 5), std=torch.ones(3, 5))
+    corr_batch = torch.corrcoef(a).unsqueeze(0)
+    for i in range(1, batch_size):
+        a = torch.normal(mean=torch.zeros(3, 5), std=torch.ones(3, 5))
+        a = torch.corrcoef(a).unsqueeze(0)
+        corr_batch = torch.cat((corr_batch, a))
+    correlations = torch.stack((corr_batch[:, 1, 0], corr_batch[:, 2, 0], corr_batch[:, 2, 1]), dim=1)
+
+    x_input, y_target = simulate_data(batch_size=batch_size, d=3, M=25, one_step_euler=one_step_euler,
+                                      cor=corr_batch, correlations=correlations)
 
     # create instance of Net Class
     if skip_enabled:
@@ -148,27 +168,28 @@ if __name__ == '__main__':
         loss.backward()
         optimizer.step()
         scheduler.step()
-        x_input, y_target = simulate_data(batch_size=batch_size, M=25, d=3, one_step_euler=one_step_euler)
+        x_input, y_target = simulate_data(batch_size=batch_size, M=25, d=3, one_step_euler=one_step_euler,
+                                          cor=corr_batch, correlations=correlations)
         #x_input, y_target = black_scholes_sim.testing(batch_size=batch_size, d=3, steps=25)
         if (i % 100) == 0:
             print("Epoche: {}".format(i))
         if ((i+1) % 4000) == 0:
-            torch.save(net.state_dict(), "models/model_{}epochs_basket_skipdisabled_2hoch17batch".format(i+1))
+            torch.save(net.state_dict(), "models/model_{}epochs_basket_skipenabled_2hoch17batch".format(i+1))
             print("--- %s seconds ---" % (time.time() - start_time))
 
     print("Last Learning Rate {}".format(scheduler.get_last_lr()[0]))
 
     # saving model
-    torch.save(net.state_dict(), "models/model_24000epochs_basket_skipdisabled_2hoch17batch")
+    torch.save(net.state_dict(), "models/model_24000epochs_basket_skipenabled_2hoch17batch")
     # loading model
-    #net = load_model(skip=skip_enabled, path="models/model_weights_3erBasket_Epochen8000_skipenabled_batchsize2hoch17")
+    net = load_model(skip=skip_enabled, path="models/model_4000epochs_basket_skipenabled_2hoch17batch")
 
     ### Validation ###
     # MC validation of Model
-    batch_size_validation = 2**10
+    batch_size_validation = 2**14
     x_input_test, validation_price = validation_mc(d=3, M=25,
                                                    batch_size=batch_size_validation,
-                                                   mc_samples=2**10,
+                                                   mc_samples=2**14,
                                                    one_step_euler=one_step_euler)
     #x_input, evaluation_price = black_scholes_sim.testing(batch_size=batch_size, d=3, steps=2**15)
 

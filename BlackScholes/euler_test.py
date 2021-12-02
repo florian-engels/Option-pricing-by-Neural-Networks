@@ -1,5 +1,5 @@
 import torch
-import black_scholes_sim
+import BlackScholes.black_scholes_sim as black_scholes_sim
 import math
 import matplotlib.pyplot as plt
 

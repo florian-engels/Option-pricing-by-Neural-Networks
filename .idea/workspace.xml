@@ -3,8 +3,66 @@
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="85dc9d87-535c-4af4-8454-18b04a05b383" name="Changes" comment="" />
+    <list default="true" id="85dc9d87-535c-4af4-8454-18b04a05b383" name="Changes" comment="first commit">
+      <change afterPath="$PROJECT_DIR$/BlackScholes/one_variable_validation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/neuralNetworkPDEsolving.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/neuralNetworkPDEsolving.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/basket_put_train_test_net.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/black_scholes_sim.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bs_train_test_net.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/euler_test.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/heston_sim.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/heston_test.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/heston_train_test_net.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/Validation_bs_skipdisabled/bs_24000epochs_withoutskip_zoomed.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/Validation_bs_skipdisabled/bs_4000epochs_withoutskip.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/Validation_bs_skipdisabled/model_12000epochs_bs_skipdisabled_2hoch16batch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/Validation_bs_skipdisabled/model_16000epochs_bs_skipdisabled_2hoch16batch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/Validation_bs_skipdisabled/model_20000epochs_bs_skipdisabled_2hoch16batch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/Validation_bs_skipdisabled/model_24000epochs_bs_skipdisabled_2hoch16batch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/Validation_bs_skipdisabled/model_4000epochs_bs_skipdisabled_2hoch16batch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/Validation_bs_skipdisabled/model_8000epochs_bs_skipdisabled_2hoch16batch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/Validation_bs_skipenabled/bs_12000epochs_skip.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/Validation_bs_skipenabled/bs_12000epochs_skip_zoomed.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/Validation_bs_skipenabled/bs_24000epochs_skip.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/Validation_bs_skipenabled/bs_24000epochs_skip_zoomed.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/Validation_bs_skipenabled/bs_4000epochs_skip.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/Validation_bs_skipenabled/bs_4000epochs_skip_zoomed.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/Validation_bs_skipenabled/model_12000epochs_bs_skipenabled_2hoch16batch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/Validation_bs_skipenabled/model_16000epochs_bs_skipenabled_2hoch16batch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/Validation_bs_skipenabled/model_20000epochs_bs_skipenabled_2hoch16batch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/Validation_bs_skipenabled/model_24000epochs_bs_skipenabled_2hoch16batch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/Validation_bs_skipenabled/model_4000epochs_bs_skipenabled_2hoch16batch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/Validation_bs_skipenabled/model_8000epochs_bs_skipenabled_2hoch16batch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/model_4000epochs_basket_skipdisabled_2hoch17batch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/model_weights" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/model_weights_3erBasket_Epochen2000_skipenabled_batchsize2hoch17" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/model_weights_3erBasket_Epochen8000_skipenabled_batchsize2hoch17" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/model_weights_4000er_skip_disabled" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/model_weights_4000er_skip_enabled" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/model_weights_heston_1000er_500steps" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/model_weights_heston_4000er_skipenabled_batch2hoch17" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/model_weights_heston_8000er_100steps" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/model_weights_heston_8000er_skipenabled_batch2hoch17" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/model_weights_heston_Epochen1000_skipenabled" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/model_weights_heston_multidim" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/model_weights_hestonmultidim_2dim_4000epochs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/model_weights_hestonmultidim_2dim_4000epochs_100steps" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/model_weights_zwischenspeicher" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/multidim_heston.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/multiheston_test.py" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -48,7 +106,7 @@
       <recent name="C:\Users\engel\PycharmProjects\neuralNetworkPDEsolving" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.basket_put_train_test_net">
+  <component name="RunManager" selected="Python.bs_train_test_net">
     <configuration name="basket_put_train_test_net" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="neuralNetworkPDEsolving" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -240,7 +298,31 @@
       <option name="presentableId" value="Default" />
       <updated>1630915856388</updated>
     </task>
+    <task id="LOCAL-00001" summary="first commit">
+      <created>1638299274617</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1638299274617</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="first commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="first commit" />
   </component>
   <component name="WindowStateProjectService">
     <state x="526" y="204" key="#Notifications" timestamp="1631517864908">
@@ -255,9 +337,10 @@
       <screen x="0" y="0" width="1280" height="680" />
     </state>
     <state x="387" y="143" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1280.680@0.0.1280.680" timestamp="1632308082750" />
-    <state x="420" y="95" key="FileChooserDialogImpl" timestamp="1638295981940">
-      <screen x="0" y="0" width="1280" height="680" />
+    <state x="-502" y="-935" key="FileChooserDialogImpl" timestamp="1638446400395">
+      <screen x="-1132" y="-1080" width="1920" height="1040" />
     </state>
+    <state x="-502" y="-935" key="FileChooserDialogImpl/0.0.1280.680/-1132.-1080.1920.1040@-1132.-1080.1920.1040" timestamp="1638446400395" />
     <state x="420" y="95" key="FileChooserDialogImpl/0.0.1280.680/-1132.-1080.1920.1040@0.0.1280.680" timestamp="1638295981940" />
     <state x="420" y="95" key="FileChooserDialogImpl/0.0.1280.680@0.0.1280.680" timestamp="1635862291055" />
     <state width="1259" height="194" key="GridCell.Tab.-1.bottom" timestamp="1635865824773">
@@ -276,21 +359,29 @@
       <screen x="0" y="0" width="1280" height="680" />
     </state>
     <state width="1259" height="194" key="GridCell.Tab.-1.right/0.0.1280.680@0.0.1280.680" timestamp="1635865824773" />
-    <state width="1259" height="162" key="GridCell.Tab.0.bottom" timestamp="1638264003627">
-      <screen x="0" y="0" width="1280" height="680" />
+    <state width="1899" height="219" key="GridCell.Tab.0.bottom" timestamp="1638444803616">
+      <screen x="-1132" y="-1080" width="1920" height="1040" />
     </state>
+    <state width="1899" height="219" key="GridCell.Tab.0.bottom/0.0.1280.680/-1132.-1080.1920.1040@-1132.-1080.1920.1040" timestamp="1638444803616" />
+    <state width="1259" height="125" key="GridCell.Tab.0.bottom/0.0.1280.680/-1132.-1080.1920.1040@0.0.1280.680" timestamp="1638371406082" />
     <state width="1259" height="162" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1638264003627" />
-    <state width="1259" height="162" key="GridCell.Tab.0.center" timestamp="1638264003627">
-      <screen x="0" y="0" width="1280" height="680" />
+    <state width="1899" height="219" key="GridCell.Tab.0.center" timestamp="1638444803616">
+      <screen x="-1132" y="-1080" width="1920" height="1040" />
     </state>
+    <state width="1899" height="219" key="GridCell.Tab.0.center/0.0.1280.680/-1132.-1080.1920.1040@-1132.-1080.1920.1040" timestamp="1638444803616" />
+    <state width="1259" height="125" key="GridCell.Tab.0.center/0.0.1280.680/-1132.-1080.1920.1040@0.0.1280.680" timestamp="1638371406082" />
     <state width="1259" height="162" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1638264003627" />
-    <state width="1259" height="162" key="GridCell.Tab.0.left" timestamp="1638264003627">
-      <screen x="0" y="0" width="1280" height="680" />
+    <state width="1899" height="219" key="GridCell.Tab.0.left" timestamp="1638444803616">
+      <screen x="-1132" y="-1080" width="1920" height="1040" />
     </state>
+    <state width="1899" height="219" key="GridCell.Tab.0.left/0.0.1280.680/-1132.-1080.1920.1040@-1132.-1080.1920.1040" timestamp="1638444803616" />
+    <state width="1259" height="125" key="GridCell.Tab.0.left/0.0.1280.680/-1132.-1080.1920.1040@0.0.1280.680" timestamp="1638371406082" />
     <state width="1259" height="162" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1638264003627" />
-    <state width="1259" height="162" key="GridCell.Tab.0.right" timestamp="1638264003627">
-      <screen x="0" y="0" width="1280" height="680" />
+    <state width="1899" height="219" key="GridCell.Tab.0.right" timestamp="1638444803616">
+      <screen x="-1132" y="-1080" width="1920" height="1040" />
     </state>
+    <state width="1899" height="219" key="GridCell.Tab.0.right/0.0.1280.680/-1132.-1080.1920.1040@-1132.-1080.1920.1040" timestamp="1638444803616" />
+    <state width="1259" height="125" key="GridCell.Tab.0.right/0.0.1280.680/-1132.-1080.1920.1040@0.0.1280.680" timestamp="1638371406082" />
     <state width="1259" height="162" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1638264003627" />
     <state width="1259" height="194" key="GridCell.Tab.1.bottom" timestamp="1635865821581">
       <screen x="0" y="0" width="1280" height="680" />
@@ -308,9 +399,10 @@
       <screen x="0" y="0" width="1280" height="680" />
     </state>
     <state width="1259" height="194" key="GridCell.Tab.1.right/0.0.1280.680@0.0.1280.680" timestamp="1635865821581" />
-    <state x="142" y="0" key="SettingsEditor" timestamp="1637919505255">
-      <screen x="0" y="0" width="1280" height="680" />
+    <state x="-919" y="-1080" key="SettingsEditor" timestamp="1638446565360">
+      <screen x="-1132" y="-1080" width="1920" height="1040" />
     </state>
+    <state x="-919" y="-1080" key="SettingsEditor/0.0.1280.680/-1132.-1080.1920.1040@-1132.-1080.1920.1040" timestamp="1638446565360" />
     <state x="142" y="0" key="SettingsEditor/0.0.1280.680/-1132.-1080.1920.1040@0.0.1280.680" timestamp="1637919505255" />
     <state x="142" y="0" key="SettingsEditor/0.0.1280.680@0.0.1280.680" timestamp="1631183937407" />
     <state width="498" height="446" key="SwitcherDM" timestamp="1631184348020">
@@ -324,13 +416,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/multiheston_test.py</url>
-          <line>47</line>
-          <option name="timeStamp" value="13" />
-        </line-breakpoint>
-      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">
