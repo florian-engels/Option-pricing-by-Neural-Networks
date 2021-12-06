@@ -1,5 +1,5 @@
 import torch
-import black_scholes_sim
+import BlackScholes.black_scholes_sim as black_scholes_sim
 import network_class
 import network_class_skip_connections
 import torch.optim as optim
@@ -8,7 +8,7 @@ import time
 
 
 
-def simulate_data(batch_size, d, M, one_step_euler, cor, correlations):
+def simulate_data(batch_size, d, M, one_step_euler):
     # drawing random values
     x0 = torch.FloatTensor(batch_size, d).uniform_(9, 10)
     time = torch.FloatTensor(batch_size).uniform_(0, 1)
@@ -16,13 +16,26 @@ def simulate_data(batch_size, d, M, one_step_euler, cor, correlations):
     gamma_phi = torch.FloatTensor(batch_size).uniform_(10, 12)
     gamma_mu = torch.FloatTensor(batch_size, d).uniform_(0.1, 0.6)
 
+    # simulate correlation matrix
+    chol = torch.zeros(batch_size, d, d)
+    x_cor = torch.FloatTensor(batch_size, d-1).uniform_(-0.999, 0.999)
+    chol[:, 0, 0] = 1
+    chol[:, 1, 0] = x_cor[:, 0]
+    chol[:, 2, 0] = x_cor[:, 0] * x_cor[:, 1]
+    chol[:, 1, 1] = torch.sqrt(1-x_cor[:, 0]**2)
+    chol[:, 2, 1] = x_cor[:, 1] * torch.sqrt(1-x_cor[:, 0]**2)
+    chol[:, 2, 2] = torch.sqrt(1-x_cor[:, 1]**2)
+    cor = torch.matmul(chol, torch.transpose(chol, 1, 2))
+    correlations = torch.stack((cor[:, 1, 0], cor[:, 2, 0], cor[:, 2, 1]), dim=1)
+
+
     # TODO: Korrelationen so häufig sehr niedrig, bzw auch häufig 0 und nie negativ
     # sample correlation-matrix
-    # a = torch.rand(batch_size, d, d)
+    # a = torch.FloatTensor(batch_size, d, d).uniform_(-0.999, 0.999)
     # a = torch.matmul(a, torch.transpose(a, 1, 2))
-    # a = (a - torch.min(a)) / (torch.max(a) - torch.min(a))
+    # a = a / (a.max()+0.001)
     # cor = a - torch.triu(torch.tril(a)) + torch.eye(d, d).repeat(batch_size, 1, 1)
-    # # transform correlations to "input-format" to give it to the NN
+    # # # transform correlations to "input-format" to give it to the NN
     # correlations = torch.stack((cor[:, 1, 0], cor[:, 2, 0], cor[:, 2, 1]), dim=1)
     # TODO: um variabel in den Dimensionen zu bleiben einen Ansatz dieser Art waehlen. Aber problematisch manchmal wenn Wert nahe 0.
     #correlations = (cor - torch.triu(cor))[cor - torch.triu(cor) != 0].reshape(batch_size, d)
@@ -55,13 +68,15 @@ def validation_mc(d, M, batch_size, mc_samples, one_step_euler):
     gamma_phi = torch.FloatTensor(batch_size).uniform_(10, 12)
     gamma_mu = torch.FloatTensor(batch_size, d).uniform_(0.1, 0.6)
 
-    # simulate correlation matrices ones
-    a = torch.normal(mean=torch.zeros(3, 5), std=torch.ones(3, 5))
-    cor = torch.corrcoef(a).unsqueeze(0)
-    for i in range(1, batch_size):
-        a = torch.normal(mean=torch.zeros(3, 5), std=torch.ones(3, 5))
-        a = torch.corrcoef(a).unsqueeze(0)
-        cor = torch.cat((cor, a))
+    chol = torch.zeros(batch_size, d, d)
+    x_cor = torch.FloatTensor(batch_size, d - 1).uniform_(-1, 1)
+    chol[:, 0, 0] = 1
+    chol[:, 1, 0] = x_cor[:, 0]
+    chol[:, 2, 0] = x_cor[:, 0] * x_cor[:, 1]
+    chol[:, 1, 1] = torch.sqrt(1 - x_cor[:, 0] ** 2)
+    chol[:, 2, 1] = x_cor[:, 1] * torch.sqrt(1 - x_cor[:, 0] ** 2)
+    chol[:, 2, 2] = torch.sqrt(1 - x_cor[:, 1] ** 2)
+    cor = torch.matmul(chol, torch.transpose(chol, 1, 2))
     correlations = torch.stack((cor[:, 1, 0], cor[:, 2, 0], cor[:, 2, 1]), dim=1)
 
     # # sample correlation-matrix
@@ -134,17 +149,7 @@ if __name__ == '__main__':
     # overall multilevel architecture levels
     overall_levels = 4
 
-    # simulate correlation matrices ones
-    a = torch.normal(mean=torch.zeros(3, 5), std=torch.ones(3, 5))
-    corr_batch = torch.corrcoef(a).unsqueeze(0)
-    for i in range(1, batch_size):
-        a = torch.normal(mean=torch.zeros(3, 5), std=torch.ones(3, 5))
-        a = torch.corrcoef(a).unsqueeze(0)
-        corr_batch = torch.cat((corr_batch, a))
-    correlations = torch.stack((corr_batch[:, 1, 0], corr_batch[:, 2, 0], corr_batch[:, 2, 1]), dim=1)
-
-    x_input, y_target = simulate_data(batch_size=batch_size, d=3, M=25, one_step_euler=one_step_euler,
-                                      cor=corr_batch, correlations=correlations)
+    x_input, y_target = simulate_data(batch_size=batch_size, d=3, M=25, one_step_euler=one_step_euler)
 
     # create instance of Net Class
     if skip_enabled:
@@ -168,8 +173,7 @@ if __name__ == '__main__':
         loss.backward()
         optimizer.step()
         scheduler.step()
-        x_input, y_target = simulate_data(batch_size=batch_size, M=25, d=3, one_step_euler=one_step_euler,
-                                          cor=corr_batch, correlations=correlations)
+        x_input, y_target = simulate_data(batch_size=batch_size, M=25, d=3, one_step_euler=one_step_euler)
         #x_input, y_target = black_scholes_sim.testing(batch_size=batch_size, d=3, steps=25)
         if (i % 100) == 0:
             print("Epoche: {}".format(i))
@@ -182,7 +186,7 @@ if __name__ == '__main__':
     # saving model
     torch.save(net.state_dict(), "models/model_24000epochs_basket_skipenabled_2hoch17batch")
     # loading model
-    net = load_model(skip=skip_enabled, path="models/model_4000epochs_basket_skipenabled_2hoch17batch")
+    #net = load_model(skip=skip_enabled, path="models/model_4000epochs_basket_skipenabled_2hoch17batch")
 
     ### Validation ###
     # MC validation of Model

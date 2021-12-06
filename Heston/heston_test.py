@@ -1,4 +1,4 @@
-import heston_sim
+import Heston.heston_sim as heston_sim
 import math
 import torch
 
@@ -67,7 +67,7 @@ if __name__ == '__main__':
 
     act_hestontrap = True
     batch_size = 1
-    example = "compfin2"
+    example = "compfin1"
     v0, s0, K, t, r, mu, kappa, sigma, rho, theta, lambd, reference_price = examples(example, batch_size=batch_size)
     print("Reference_price: {}".format(reference_price))
 
@@ -84,9 +84,9 @@ if __name__ == '__main__':
     y_target = torch.mean(torch.exp(-r * t) * torch.nn.ReLU()(asset_end - K))
     print("FTE_Sol: {}".format(y_target.item()))
 
-    limit_max = 1000
-    k = math.log(K[0].item() / s0[0].item())
-    from functools import partial
-    cf_H_b_good = partial(heston_sim.cf_Heston_good, t=t[0].item(), v0=v0[0].item(), mu=mu[0].item(), theta=theta[0].item(), sigma=sigma[0].item(), kappa=kappa[0].item(), rho=rho[0].item())
-    call = s0[0].item() * heston_sim.Q1(k, cf_H_b_good, limit_max) - K[0].item() * math.exp(-r[0].item() * t[0].item()) * heston_sim.Q2(k, cf_H_b_good, limit_max)
-    print("Fourier Internet Sol: {}".format(call))
+    # limit_max = 1000
+    # k = math.log(K[0].item() / s0[0].item())
+    # from functools import partial
+    # cf_H_b_good = partial(heston_sim.cf_Heston_good, t=t[0].item(), v0=v0[0].item(), mu=mu[0].item(), theta=theta[0].item(), sigma=sigma[0].item(), kappa=kappa[0].item(), rho=rho[0].item())
+    # call = s0[0].item() * heston_sim.Q1(k, cf_H_b_good, limit_max) - K[0].item() * math.exp(-r[0].item() * t[0].item()) * heston_sim.Q2(k, cf_H_b_good, limit_max)
+    # print("Fourier Internet Sol: {}".format(call))
