@@ -1,6 +1,7 @@
 import time
 import torch
-import heston_sim, network_class_skip_connections, network_class
+import Heston.heston_sim as heston_sim
+import network_class_skip_connections, network_class
 import torch.optim as optim
 import matplotlib.pyplot as plt
 
@@ -16,7 +17,7 @@ def simulate_data(d, batch_size, steps):
     r = mu  # because of risk neutral measure..
     kappa = torch.FloatTensor(batch_size, d).uniform_(4, 6)  # mean reversion speed of variance
     sigma = torch.FloatTensor(batch_size, d).uniform_(0.05, 0.08)  # volatility of variance
-    rho = torch.FloatTensor(batch_size, int((2*d-1)*(2*d)/2)).uniform_(-0.1, 0.1)  # correlation of brownian motions
+    rho = torch.FloatTensor(batch_size, int((2*d-1)*(2*d)/2)).uniform_(-0.9, 0.9)  # correlation of brownian motions
     theta = torch.FloatTensor(batch_size, d).uniform_(0.06, 0.09)  # mean reversion level of variance
 
     # draw random correlation matrix -> besserer approach, aber dauert leider lange
@@ -36,7 +37,7 @@ def simulate_data(d, batch_size, steps):
     y_target = heston_sim.multidim_fte_euler(d=d, batch_size=batch_size, steps=steps, v0=v0, s0=s0,
                                              t=t, mu=mu, kappa=kappa, sigma=sigma, rho=rho, theta=theta)
     # payoffs, then discounted
-    # TODO: abzinsen hier mit gleicher riskfree rate oder nicht?
+    # TODO: hier muss noch mit passendem mu dann abgezinst werden
     y_target = torch.nn.ReLU()(K - torch.mean(y_target, dim=1))  # torch.exp(-r * t) *
 
     return x_input, y_target
@@ -116,7 +117,7 @@ if __name__ == '__main__':
     # overall multilevel architecture levels
     overall_levels = 4
     # dimensions (meaning the number of different price processes)
-    d = 1
+    d = 3
 
     x_input, y_target = simulate_data(d=d, batch_size=batch_size, steps=steps)
 

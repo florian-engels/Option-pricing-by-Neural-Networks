@@ -1,6 +1,6 @@
 import torch
 import math
-import matplotlib.pyplot as pt
+import matplotlib.pyplot as plt
 
 
 def fte_euler(batch_size, s0, v0, mu, kappa, theta, sigma, steps, t, rho, K, r):
@@ -47,14 +47,14 @@ def multidim_fte_euler(d, batch_size, s0, v0, mu, kappa, theta, sigma, steps, t,
     count = 0
     for i in range(2*d):
         for j in range(i):
-            cor_lower[:, i, j] = rho[:, count]
+            #cor_lower[:, i, j] = rho[:, count]
+            cor_lower[:, i, j] = torch.prod(rho[:, j:i], dim=1)
             count = count + 1
     cor_upper = torch.transpose(cor_lower, 1, 2)
     cor = cor_upper + cor_lower
     for i in range(2*d):
         cor[:, i, i] = 1
 
-    # TODO: wird leider machmal singuläre Matrix, darum noch kümmern
     noise_mat = torch.linalg.cholesky(cor)
 
     for i in range(steps):

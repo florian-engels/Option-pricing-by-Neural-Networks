@@ -5,7 +5,7 @@ from torch.distributions.multivariate_normal import MultivariateNormal
 
 
 # Euler-Maruyama Simulation
-def euler_bs(x, t, gamma_sigma, batch_size):
+def euler_bs(x, t, gamma_sigma, batch_size, gamma_mu):
     """
     Euler-Maruyama Scheme to Simulate Path of SDE
     :param x: initial value tensor
@@ -15,23 +15,21 @@ def euler_bs(x, t, gamma_sigma, batch_size):
     :param batch_size: tensor size
     :return: value of SDE at time t
     """
-    x = x.squeeze(dim=1)
-    t = t.squeeze(dim=1)
-    gamma_sigma = gamma_sigma.squeeze(dim=1)
-    S = x * torch.exp(-0.5 * t * gamma_sigma**2 + gamma_sigma *
-                      torch.sqrt(t)*torch.normal(mean=torch.zeros(batch_size), std=torch.ones(batch_size)))
+
+    S = x * torch.exp((gamma_mu - 0.5 * gamma_sigma**2) * t +
+                      gamma_sigma * torch.sqrt(t)*torch.normal(mean=torch.zeros(batch_size), std=torch.ones(batch_size)))
     return S
 
 
-def true_euler_for_check(x, t, gamma_sigma, batch_size, steps):
+def true_euler_for_check(x, t, gamma_sigma, gamma_mu, batch_size, steps):
     S = torch.zeros(batch_size, steps+1)
     S[:, 0] = x
     for i in range(steps):
-        S[:, i + 1] = S[:, i] + S[:, i] * gamma_sigma * torch.normal(mean=torch.zeros(batch_size), std=torch.sqrt(t/steps))
+        S[:, i + 1] = S[:, i] + S[:, i] * gamma_mu * (t/steps) + S[:, i] * gamma_sigma * torch.normal(mean=torch.zeros(batch_size), std=torch.sqrt(t/steps))
     return S[:, -1]
 
 
-def bs_closed_payoff(x, t, gamma_sigma, gamma_phi):
+def bs_closed_payoff(x, t, gamma_sigma, gamma_phi, gamma_mu):
     """
     function to compute closed BS price for european put
     :param x: initial value
@@ -41,8 +39,8 @@ def bs_closed_payoff(x, t, gamma_sigma, gamma_phi):
     :return: fair price of put option
     """
     sigma_sqrtt = gamma_sigma * torch.sqrt(t)
-    h_gamma = -(1/sigma_sqrtt)*(torch.log(x / gamma_phi) + (t * (gamma_sigma ** 2))/2)
-    value = gamma_phi * n_dist(h_gamma + sigma_sqrtt) - x * n_dist(h_gamma)
+    h_gamma = -(1/sigma_sqrtt)*(torch.log(x / gamma_phi) + gamma_mu * t + (t * (gamma_sigma ** 2))/2)
+    value = torch.exp(-t*gamma_mu) * gamma_phi * n_dist(h_gamma + sigma_sqrtt) - x * n_dist(h_gamma)
 
     return value
 
@@ -78,6 +76,7 @@ def euler_multidim(x, t, batch_size, M, gamma_sigma, cor, gamma_mu, d, one_step_
         S = S[:, :, M]
 
     return S
+
 
 # method of code from paper
 def testing(batch_size, d, steps):

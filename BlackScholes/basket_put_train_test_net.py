@@ -139,7 +139,7 @@ if __name__ == '__main__':
     start_time = time.time()
 
     # Enable skip connections
-    skip_enabled = True
+    skip_enabled = False
     # simulate data with one-step solution (True) or via Euler (False)
     one_step_euler = True
     # Chargengroeße
@@ -178,15 +178,15 @@ if __name__ == '__main__':
         if (i % 100) == 0:
             print("Epoche: {}".format(i))
         if ((i+1) % 4000) == 0:
-            torch.save(net.state_dict(), "models/model_{}epochs_basket_skipenabled_2hoch17batch".format(i+1))
+            torch.save(net.state_dict(), "models/model_{}epochs_basket_skipdisabled_2hoch17batch".format(i+1))
             print("--- %s seconds ---" % (time.time() - start_time))
 
     print("Last Learning Rate {}".format(scheduler.get_last_lr()[0]))
 
     # saving model
-    torch.save(net.state_dict(), "models/model_24000epochs_basket_skipenabled_2hoch17batch")
+    torch.save(net.state_dict(), "models/model_24000epochs_basket_skipdisabled_2hoch17batch")
     # loading model
-    #net = load_model(skip=skip_enabled, path="models/model_4000epochs_basket_skipenabled_2hoch17batch")
+    net = load_model(skip=skip_enabled, path="BlackScholes/models/model_20000epochs_basket_skipdisabled_2hoch17batch")
 
     ### Validation ###
     # MC validation of Model

@@ -9,17 +9,17 @@ import time
 
 def simulate_data(batch_size):
     # drawing random values
-    x0 = torch.FloatTensor(batch_size).uniform_(9, 10).unsqueeze(1)
-    time = torch.FloatTensor(batch_size).uniform_(0, 1).unsqueeze(1)
-    gamma_sigma = torch.FloatTensor(batch_size).uniform_(0.1, 0.6).unsqueeze(1)
-    gamma_phi = torch.FloatTensor(batch_size).uniform_(10, 12).unsqueeze(1)
+    x0 = torch.FloatTensor(batch_size).uniform_(9, 10)
+    time = torch.FloatTensor(batch_size).uniform_(0, 1)
+    gamma_sigma = torch.FloatTensor(batch_size).uniform_(0.1, 0.6)
+    gamma_phi = torch.FloatTensor(batch_size).uniform_(10, 12)
 
-    x_input = torch.cat((x0, time, gamma_sigma, gamma_phi), dim=1)
+    x_input = torch.cat((x0.unsqueeze(1), time.unsqueeze(1), gamma_sigma.unsqueeze(1), gamma_phi.unsqueeze(1)), dim=1)
 
     # Euler mit gesamtem Pfad als Output
-    y_target = black_scholes_sim.euler_bs(x=x0, t=time, gamma_sigma=gamma_sigma, batch_size=batch_size)
+    y_target = black_scholes_sim.euler_bs(x=x0, t=time, gamma_sigma=gamma_sigma, batch_size=batch_size, gamma_mu=torch.Tensor([0]).repeat(batch_size))
     # Payoff betrachtet nur Endzeitpunkt
-    y_target = gamma_phi.squeeze(dim=1) - y_target
+    y_target = gamma_phi - y_target
     y_target[y_target < 0] = 0
 
     return x_input, y_target
@@ -62,7 +62,7 @@ if __name__ == '__main__':
     # create loss function
     criterion = torch.nn.MSELoss()
 
-    epochs = 24000
+    epochs = 100
     #scheduler = optim.lr_scheduler.ExponentialLR(optimizer=optimizer, gamma=0.25)
     scheduler = optim.lr_scheduler.MultiStepLR(optimizer=optimizer, milestones=[4000, 8000, 12000, 16000, 20000, 24000], gamma=0.25)
     loss_graph = [0]*epochs
@@ -75,7 +75,7 @@ if __name__ == '__main__':
         optimizer.step()
         scheduler.step()
         x_input, y_target = simulate_data(batch_size=batch_size)
-        if (i % 100) == 0:
+        if (i % 10) == 0:
             print("Epoche: {}".format(i))
         if ((i+1) % 4000) == 0:
             torch.save(net.state_dict(), "models/model_{}epochs_bs_skipdisabled_2hoch16batch".format(i+1))
@@ -85,9 +85,9 @@ if __name__ == '__main__':
     print("Last Learning Rate {}".format(scheduler.get_last_lr()[0]))
 
     # saving model
-    torch.save(net.state_dict(), "models/model_24000epochs_bs_skipdisabled_2hoch16batch")
+    #torch.save(net.state_dict(), "models/model_24000epochs_bs_skipdisabled_2hoch16batch")
     # loading model
-    net = load_model(skip=skip_enabled, path="models/model_20000epochs_bs_skipdisabled_2hoch16batch")
+    #net = load_model(skip=skip_enabled, path="models/model_20000epochs_bs_skipdisabled_2hoch16batch")
 
 
     ### Validation ###
@@ -102,12 +102,13 @@ if __name__ == '__main__':
     nn_price = net.predict(x_input_test)
     validation_price = black_scholes_sim.bs_closed_payoff(x=x0_test, t=time_test,
                                                           gamma_sigma=gamma_sigma_test,
-                                                          gamma_phi=gamma_phi_test)
+                                                          gamma_phi=gamma_phi_test,
+                                                          gamma_mu=torch.tensor([0]).repeat(batch_size).unsqueeze(dim=1))
     l1_error = (torch.abs(nn_price - validation_price) / (1 + torch.abs(validation_price)))
     nn_prices_for_plot = nn_price
     validation_prices_for_plot = validation_price
 
-    evaluation_batches = 100
+    evaluation_batches = 1
     for i in range(1, evaluation_batches):
         x0_test = torch.FloatTensor(batch_size).uniform_(9, 10).unsqueeze(1)
         time_test = torch.FloatTensor(batch_size).uniform_(0, 1).unsqueeze(1)
@@ -119,7 +120,8 @@ if __name__ == '__main__':
         nn_price = net.predict(x_input_test)
         validation_price = black_scholes_sim.bs_closed_payoff(x=x0_test, t=time_test,
                                                               gamma_sigma=gamma_sigma_test,
-                                                              gamma_phi=gamma_phi_test)
+                                                              gamma_phi=gamma_phi_test,
+                                                              gamma_mu=torch.tensor([0]).repeat(batch_size).unsqueeze(dim=1))
         l1_error = torch.cat((l1_error, torch.abs(nn_price - validation_price) / (1 + torch.abs(validation_price))))
         nn_prices_for_plot = torch.cat((nn_prices_for_plot, nn_price))
         validation_prices_for_plot = torch.cat((validation_prices_for_plot, validation_price))

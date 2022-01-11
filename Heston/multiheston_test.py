@@ -1,5 +1,5 @@
 import torch
-import heston_sim
+import Heston.heston_sim as heston_sim
 
 # d = 2
 # batch_size = 2**14
@@ -47,3 +47,6 @@ y_target = heston_sim.multidim_fte_euler(d=d, batch_size=batch_size, steps=steps
 # payoffs, then discounted
 y_target = torch.mean(torch.exp(-t[0] * r[0, 0]) * torch.nn.ReLU()(torch.mean(y_target, dim=1) - K))
 print(y_target)
+# TODO: zum TESTEN musst du einmal im FTE Euler die Belegung der Korrelationen austauschen mit dem auskommentierten
+reference_price = 0.08875
+print(reference_price)

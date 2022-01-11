@@ -50,11 +50,12 @@ if __name__ == '__main__':
     x_input, y_target = simulate_data(batch_size=batch_size)
 
     # loading model
-    net = load_model(skip=skip_enabled, path="BlackScholes/models/model_24000epochs_bs_skipdisabled_2hoch16batch")
+    net = load_model(skip=skip_enabled, path="models/model_24000epochs_bs_skipdisabled_2hoch16batch")
 
     ### Validation ###
     # test Model against BS Price of closed form, but only change one variable
     x0 = torch.tensor([10.0]).repeat(batch_size).unsqueeze(1)
+    #x0 = torch.arange(start=9.5, end=10.5, step=(10.5-9.5) / batch_size).unsqueeze(1)
     time = torch.tensor([1]).repeat(batch_size).unsqueeze(1)
     gamma_sigma = torch.arange(start=0.1, end=0.6, step=(0.6-0.1)/batch_size).unsqueeze(1)
     gamma_phi = torch.tensor([10.5]).repeat(batch_size).unsqueeze(1)
@@ -91,6 +92,12 @@ if __name__ == '__main__':
     std = torch.sqrt(torch.var(l1_error))
     print("L1-Error: {}".format(l1_error_avg))
     print("Std: {}".format(std))
+
+    # fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
+    # surf = ax.plot_surface(x0, gamma_sigma, nn_prices_for_plot.squeeze(1).tolist(), cmap=cm.coolwarm,
+    #                        linewidth=0, antialiased=False)
+    # fig.colorbar(surf, shrink=0.5, aspect=5)
+    # plt.show()
 
     plt.plot(gamma_sigma, nn_prices_for_plot.squeeze(1).tolist(), marker=".", markersize=0.7)
     plt.plot(gamma_sigma, validation_prices_for_plot.squeeze(1).tolist())
